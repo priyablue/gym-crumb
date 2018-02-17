@@ -1,6 +1,10 @@
 # gym-crumb
 
 
-## installation
+
+# Installation
+
+```bash
 cd gym-crumb
 pip install -e .
+```
