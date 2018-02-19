@@ -1,0 +1,5 @@
+gym_crumb.egg-info/PKG-INFO
+gym_crumb.egg-info/SOURCES.txt
+gym_crumb.egg-info/dependency_links.txt
+gym_crumb.egg-info/requires.txt
+gym_crumb.egg-info/top_level.txt
