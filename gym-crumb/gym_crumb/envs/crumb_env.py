@@ -10,6 +10,8 @@ from sensor_msgs.msg import JointState
 from math import radians
 import numpy as np
 
+sign = lambda a: (a>0) - (a<0)
+module = lambda a: a*sign(a)
 
 
 class CrumbEnv(gym.Env):
@@ -25,31 +27,43 @@ class CrumbEnv(gym.Env):
 		self.joint_state = rospy.ServiceProxy('/gazebo/get_joint_properties', GetJointProperties)
 		self.unpause()
 		self.resetworld()
-		self.pick()
+		self.pick(gripper_time = 5.0)
 
 	def _reset(self):
+		self.gripper.publish(1.0)
 		for i in range(5):
 			self.arm[i].publish(0.0)
 			rospy.sleep(0.5)
 		self.resetworld()
-		self.pick()
-		reward, state = self.get_state()
-		return state, reward
+		self.pick(gripper_time = 5.0)
+		_, state = self.get_state()
+		return self.binarizer(state)
 		
 	def _seed(self, seed = None):
 		print('12')
 
 	def _step(self, action):
 		"""action = (joint, step)"""
+		box_h, _ = self.get_state()
 		self.arm[action[0]].publish(action[1])
-		rospy.sleep(0.5)
-		reward, state = self.get_state()		
-		return state, reward
+		rospy.sleep(1.0)
+		reward = 0
+		new_h, state = self.get_state()
+		if (new_h - box_h) > 0:
+			reward = 1
+		else:
+			reward = -1
+		done = False
+		r = module(state[1]) + module(state[2] - radians(90)) + module(state[3])
+		if (r < radians(45)):
+			done = True
+			reward = 100 		
+		return self.binarizer(state), reward, done
 
 	def get_state(self):
-		return self.box_state('little_box_0', 'link').pose.position.z, [self.joint_state('arm_'+str(i+1)+'_joint').position for i in range(5)]
+		return self.box_state('little_box_0', 'link').pose.position.z, [self.joint_state('arm_'+str(i+1)+'_joint').position[0] for i in range(5)]
 
-	def pick(self):
+	def pick(self, gripper_time):
 		self.gripper.publish(1.0)
 		rospy.sleep(0.5)
 		self.arm[3].publish(radians(-70))
@@ -58,8 +72,16 @@ class CrumbEnv(gym.Env):
 		rospy.sleep(0.5)
 		self.arm[1].publish(radians(60))
 		rospy.sleep(0.5)
+		self.arm[0].publish(radians(0))
+		rospy.sleep(0.5)
 		self.gripper.publish(0.0)
-		rospy.sleep(5.0)
+		rospy.sleep(gripper_time)
+
+
+	def binarizer(self, state):
+		t = radians(180)/3
+		bin_state = [state[i]//t for i in range(1, 4)]
+		return bin_state 
 		
 
 
