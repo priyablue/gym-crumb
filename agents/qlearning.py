@@ -6,12 +6,13 @@ from math import radians
 import numpy as np
 from collections import defaultdict
 
+
 class QLearningAgent():
   
   def __init__(self,alpha,epsilon,discount):
 
     self.Actions = ()
-    for i in range(1,3):
+    for i in range(1,4):
 	self.Actions += ((i, radians(90)), (i, radians(0)), (i, radians(-90)))
     self._qValues = defaultdict(lambda:defaultdict(lambda:0))
     self.alpha = alpha
@@ -22,6 +23,7 @@ class QLearningAgent():
     """
       Returns Q(state,action)
     """
+    
     return self._qValues[state][action]
 
   def setQValue(self,state,action,value):

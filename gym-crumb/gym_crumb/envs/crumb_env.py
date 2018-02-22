@@ -46,18 +46,19 @@ class CrumbEnv(gym.Env):
 		"""action = (joint, step)"""
 		box_h, _ = self.get_state()
 		self.arm[action[0]].publish(action[1])
-		rospy.sleep(1.0)
+		rospy.sleep(2.0)
 		reward = 0
-		new_h, state = self.get_state()
-		if (new_h - box_h) > 0:
-			reward = 1
-		else:
-			reward = -1
+		new_h, state = self.get_state() 
+		reward = (new_h - box_h)//0.1
+		if reward < 0:
+			reward = reward * 2
+		if reward == 0:
+			reward = - 1
 		done = False
 		r = module(state[1]) + module(state[2] - radians(90)) + module(state[3])
 		if (r < radians(45)):
 			done = True
-			reward = 100 		
+			reward = 10 		
 		return self.binarizer(state), reward, done
 
 	def get_state(self):
