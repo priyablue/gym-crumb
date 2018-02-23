@@ -30,10 +30,11 @@ class CrumbEnv(gym.Env):
 		self.pick(gripper_time = 5.0)
 
 	def _reset(self):
-		self.gripper.publish(1.0)
 		for i in range(5):
 			self.arm[i].publish(0.0)
 			rospy.sleep(0.5)
+		self.gripper.publish(2.0)
+		rospy.sleep(5.0)
 		self.resetworld()
 		self.pick(gripper_time = 5.0)
 		_, state = self.get_state()
@@ -56,7 +57,7 @@ class CrumbEnv(gym.Env):
 			reward = - 1
 		done = False
 		r = module(state[1]) + module(state[2] - radians(90)) + module(state[3])
-		if (r < radians(45)):
+		if (r < radians(22.5)):
 			done = True
 			reward = 10 		
 		return self.binarizer(state), reward, done
@@ -80,7 +81,7 @@ class CrumbEnv(gym.Env):
 
 
 	def binarizer(self, state):
-		t = radians(180)/3
+		t = radians(180)/5
 		bin_state = [state[i]//t for i in range(1, 4)]
 		return bin_state 
 		

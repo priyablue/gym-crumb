@@ -13,7 +13,7 @@ class QLearningAgent():
 
     self.Actions = ()
     for i in range(1,4):
-	self.Actions += ((i, radians(90)), (i, radians(0)), (i, radians(-90)))
+	self.Actions += ((i, radians(90)), (i, radians(45)), (i, radians(0)), (i, radians(-45)), (i, radians(-90)))
     self._qValues = defaultdict(lambda:defaultdict(lambda:0))
     self.alpha = alpha
     self.epsilon = epsilon
