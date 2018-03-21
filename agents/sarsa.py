@@ -6,8 +6,7 @@ from math import radians
 import numpy as np
 from collections import defaultdict
 
-
-class QLearningAgent():
+class SarsaAgent():
   
   def __init__(self,alpha,epsilon,discount):
 
@@ -23,7 +22,6 @@ class QLearningAgent():
     """
       Returns Q(state,action)
     """
-    
     return self._qValues[state][action]
 
   def setQValue(self,state,action,value):
@@ -31,16 +29,7 @@ class QLearningAgent():
       Sets the Qvalue for [state,action] to the given value
     """
     self._qValues[state][action] = value
-
-  def getValue(self, state):
-    """
-      Returns max_action Q(state,action)
-    """
-    
-    possibleActions = self.Actions
-
-    return max([self.getQValue(state, a) for a in possibleActions])
-    
+   
   def getPolicy(self, state):
     """
       Compute the best action to take in a state. 
@@ -72,13 +61,13 @@ class QLearningAgent():
     	action = self.getPolicy(state)
     return action
 
-  def update(self, state, action, nextState, reward):
+  def update(self, state, action, nextState, nextAction, reward):
 
     #agent parameters
     gamma = self.discount
     learning_rate = self.alpha
     
-    reference_qvalue = reward + gamma * self.getValue(nextState)
+    reference_qvalue = reward + gamma * self.getQValue(nextState, nextAction)
     updated_qvalue = (1-learning_rate) * self.getQValue(state,action) + learning_rate * reference_qvalue
     self.setQValue(state,action,updated_qvalue)
 

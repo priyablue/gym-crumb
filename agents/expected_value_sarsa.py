@@ -6,8 +6,7 @@ from math import radians
 import numpy as np
 from collections import defaultdict
 
-
-class QLearningAgent():
+class EVSarsaAgent():
   
   def __init__(self,alpha,epsilon,discount):
 
@@ -23,7 +22,6 @@ class QLearningAgent():
     """
       Returns Q(state,action)
     """
-    
     return self._qValues[state][action]
 
   def setQValue(self,state,action,value):
@@ -34,13 +32,19 @@ class QLearningAgent():
 
   def getValue(self, state):
     """
-      Returns max_action Q(state,action)
+      Returns V(s) according to expected value SARSA algorithm
+      This should be equal to expected action q-value over action probabilities defined
+      by epsilon-greedy policy with current epsilon.
     """
     
     possibleActions = self.Actions
-
-    return max([self.getQValue(state, a) for a in possibleActions])
-    
+    epsilon = self.epsilon
+    value = 0
+    value += self.getQValue(state, self.getPolicy(state))*(1-epsilon)
+    for a in possibleActions:
+	value += epsilon*self.getQValue(state, a)/len(possibleActions)
+    return value
+   
   def getPolicy(self, state):
     """
       Compute the best action to take in a state. 
@@ -54,11 +58,7 @@ class QLearningAgent():
     return best_action
 
   def getAction(self, state):
-    """
-      Compute the action to take in the current state, including exploration.  
 
-    """
-    
     # Pick Action
     possibleActions = self.Actions
     action = None
@@ -81,6 +81,5 @@ class QLearningAgent():
     reference_qvalue = reward + gamma * self.getValue(nextState)
     updated_qvalue = (1-learning_rate) * self.getQValue(state,action) + learning_rate * reference_qvalue
     self.setQValue(state,action,updated_qvalue)
-
 
 
