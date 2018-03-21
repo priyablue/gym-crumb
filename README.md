@@ -51,7 +51,8 @@ ACTION_SPACE = {
 3: radians(-45),
 4: radians(-90),
 }
-env.step([0,ACTION_SPACE[3]])'''
+env.step([0,ACTION_SPACE[3]])
+'''
 
 
 # Agents
