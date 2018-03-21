@@ -9,10 +9,10 @@
 2. Gitclone into catkin_ws/src https://github.com/CRUMBproject/ROS;
 
 3. Add to CmakeList:
-'''bash
+```bash
 add_compile_options(-std=c++11)
 add_compile_options(-std=gnu++11)
-'''
+```
 
 4. In file roboticsgroup_gazebo_plugins/mimic_joint_plugin.cpp replace SetMaxForce with SetParam("max_force", 0,max_effort_) and SetAngle with SetParam("angle", 0, math::Angle(angle));
 
@@ -52,7 +52,7 @@ ACTION_SPACE = {
 4: radians(-90),
 }
 env.step([0,ACTION_SPACE[3]])
-'''
+```
 
 
 # Agents
