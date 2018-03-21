@@ -5,15 +5,21 @@
 # Installation of CRUMB
 
 Create workspapce (for example catkin_ws);
+
 Gitclone into catkin_ws/src https://github.com/CRUMBproject/ROS;
+
 Add to CmakeList:
 '''bash
 add_compile_options(-std=c++11)
 add_compile_options(-std=gnu++11)
 '''
+
 In file roboticsgroup_gazebo_plugins/mimic_joint_plugin.cpp replace SetMaxForce with SetParam("max_force", 0,max_effort_) and SetAngle with SetParam("angle", 0, math::Angle(angle));
+
 Intall: ros-kinetic-position-controllers, ros-kinetic-effort-controllers, ros-kinetic-joint-state-controller;
+
 Build package with catkin_make (I had got message told me to use "find . -iname "*.xacro" | xargs sed -i 's#<\([/]\?\)\(if\|unless\|include\|arg\|property\|macro\|insert_block\)#<\1xacro:\2#g' /home/airan/kinetic/src/Crumb/crumb_description/urdf/crumb.xacro" and after using this command CRUMB had built)
+
 There are some worlds in crumb_gazebo that uses camera. You should replace path in this file.world with path, in which you wnat to save the images.
 	
 
@@ -45,7 +51,8 @@ ACTION_SPACE = {
 3: radians(-45),
 4: radians(-90),
 }
-env.step([0,ACTION_SPACE[3]])
+env.step([0,ACTION_SPACE[3]])'''
+
 
 # Agents
 
