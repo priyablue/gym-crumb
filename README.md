@@ -6,7 +6,7 @@
 
 1. Create workspapce (for example catkin_ws);
 
-2. Gitclone into catkin_ws/src https://github.com/CRUMBproject/ROS;
+2. Gitclone into catkin_ws/src https://github.com/CRUMBproject/ROS; https://github.com/vanadiumlabs/arbotix_ros.git
 
 3. Add to CmakeList:
 ```bash
