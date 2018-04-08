@@ -20,6 +20,8 @@ add_compile_options(-std=gnu++11)
 
 6. Build package with catkin_make (I had got message told me to use "find . -iname "*.xacro" | xargs sed -i 's#<\([/]\?\)\(if\|unless\|include\|arg\|property\|macro\|insert_block\)#<\1xacro:\2#g' /home/airan/kinetic/src/Crumb/crumb_description/urdf/crumb.xacro" and after using this command CRUMB had built)
 
+If you have error: ‘setupClient’ is not a member of ‘gazebo’, change file catkin_ws/src/Crumb/crumb_listener/src/crumb_listener_gazebo.cpp : replace setupClient with gazebo::client::setup(_argc, _argv); add #include <gazebo/gazebo_client.hh>
+
 7. There are some worlds in crumb_gazebo that uses camera. You should replace path in this file.world with path, in which you wnat to save the images.
 	
 

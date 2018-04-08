@@ -6,13 +6,20 @@ from math import radians
 import numpy as np
 from collections import defaultdict
 
+def binor(i, j):
+    m = 90/j
+    s = ((i, 0),)
+    for k in range(1,j+1):
+        s += ((i, radians(k*m)),(i, radians(-k*m)))
+    return s
+
 class EVSarsaAgent():
   
   def __init__(self,alpha,epsilon,discount):
 
     self.Actions = ()
-    for i in range(1,4):
-	self.Actions += ((i, radians(90)), (i, radians(0)), (i, radians(-90)))
+    for i in range(3): #for gym-crumb range(1,4)
+    	self.Actions += binor(i,5) #
     self._qValues = defaultdict(lambda:defaultdict(lambda:0))
     self.alpha = alpha
     self.epsilon = epsilon
@@ -42,7 +49,7 @@ class EVSarsaAgent():
     value = 0
     value += self.getQValue(state, self.getPolicy(state))*(1-epsilon)
     for a in possibleActions:
-	value += epsilon*self.getQValue(state, a)/len(possibleActions)
+        value += epsilon*self.getQValue(state, a)/len(possibleActions)
     return value
    
   def getPolicy(self, state):
