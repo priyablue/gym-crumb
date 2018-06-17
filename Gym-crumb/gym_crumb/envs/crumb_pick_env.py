@@ -10,8 +10,6 @@ from sensor_msgs.msg import JointState
 from math import radians
 import numpy as np
 
-sign = lambda a: 1 if a>0 else -1 if (a<0) else 0
-module = lambda a: a*sign(a)
 metric = lambda a1, a2: ((a1.x - a2.x)**2 + (a1.y - a2.y)**2 + (a1.z - a2.z)**2)**(1/2)
 
 
@@ -34,7 +32,7 @@ class CrumbPickEnv(gym.Env):
 	def _reset(self):
 		for i in range(5):
 			self.arm[i].publish(0.0)
-			rospy.sleep(0.5)
+			rospy.sleep(1.5)
 		self.gripper.publish(2.0)
 		self.resetworld()
 		_, state = self.get_state()
@@ -47,8 +45,9 @@ class CrumbPickEnv(gym.Env):
 		"""action = (joint, step)"""
 		gripper = self.link_state('gripper_1_link', '').link_state.pose.position
 		r1 = metric(gripper, self.aim)//0.05
-		self.arm[action[0]].publish(action[1])
-		rospy.sleep(0.2)
+		_, state = self.get_state()
+		self.arm[action[0]].publish(state[action[0]]+action[1])
+		rospy.sleep(1.5)
 		gripper = self.link_state('gripper_1_link', '').link_state.pose.position
 		r2 = metric(gripper, self.aim)//0.05
 		reward = 0
@@ -65,7 +64,7 @@ class CrumbPickEnv(gym.Env):
 		return state, reward, done
 
 	def get_state(self):
-		return self.box_state('little_box_0', 'link').pose.position.z, [self.joint_state('arm_'+str(i+1)+'_joint').position[0] for i in range(5)]
+		return self.box_state('little_box_0', 'link').pose.position, [self.joint_state('arm_'+str(i+1)+'_joint').position[0] for i in range(5)]
 
 
 
